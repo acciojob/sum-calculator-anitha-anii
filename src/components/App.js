@@ -1,13 +1,42 @@
+import React, { useState } from 'react';
 
-import React from "react";
-import './../styles/App.css';
+const APP = () => {
+  const [numbers, setNumbers] = useState([]);
+  const [sum, setSum] = useState(0);
 
-const App = () => {
+  let debounceTimeout;
+
+  const updateSumDebounced = (numbers) => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+      setSum(sum);
+    }, 500); 
+  };
+
+  const handleInputChange = (event) => {
+    const input = event.target.value.trim();
+    if (input === '') {
+      setNumbers([]);
+      setSum(0);
+      return;
+    }
+
+    const newNumber = parseFloat(input);
+    if (!isNaN(newNumber)) {
+      setNumbers((prevNumbers) => [...prevNumbers, newNumber]);
+      updateSumDebounced([...numbers, newNumber]);
+    }
+  };
+
   return (
     <div>
-        {/* Do not remove the main div */}
+     
+        <input type="number" onChange={handleInputChange} />
+      
+      <p>Sum: {sum}</p>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default APP;
